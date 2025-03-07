@@ -1,0 +1,31 @@
+FROM php:8.2-fpm
+
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    zip \
+    unzip \
+    npm
+RUN docker-php-ext-install pdo_mysql
+
+# Устанавливаем расширение Imagick
+RUN apt-get install -y libmagickwand-dev \
+    && pecl install imagick \
+    && docker-php-ext-enable imagick
+
+# configure the GD extension to include support for JPEG and PNG image formats
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install gd
+RUN apt-get update \
+    && apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev
+
+RUN echo "upload_max_filesize=10M" >> /usr/local/etc/php/conf.d/uploads.ini
+RUN echo "post_max_size=12M" >> /usr/local/etc/php/conf.d/uploads.ini
+RUN echo "memory_limit = 256M" >> /usr/local/etc/php/conf.d/uploads.ini
+
+
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+WORKDIR /var/www
+COPY . .
+
+
