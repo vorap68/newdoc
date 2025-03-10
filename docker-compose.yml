@@ -11,6 +11,7 @@ services:
             - 8889:80
         depends_on:
             - app
+            - vite
         container_name: project_nginx
 
     app:
@@ -22,6 +23,17 @@ services:
         depends_on:
             - db
         container_name: project_app
+
+    vite:
+        build:
+            context: .
+            dockerfile: _docker/vite/Dockerfile
+        ports:
+            - "5173:5173"
+        volumes:
+            - .:/var/www
+        container_name: project_vite
+        command: ["npm", "run", "dev"]
 
     db:
         image: mysql:8.0
