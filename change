@@ -1,4 +1,4 @@
 #!/bin/bash
 # -*- ENCODING: UTF-8 -*-
-echo vorap13 | sudo --stdin chown -R vorap:vorap app database tests
-echo vorap13 | sudo --stdin chmod -R 777 storage resources/js/components
+echo vorap13 | sudo --stdin chown -R vorap:vorap app database tests resources/views  node_modules
+echo vorap13 | sudo --stdin chmod -R 777 storage resources/js

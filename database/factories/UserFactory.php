@@ -23,8 +23,14 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $name = fake()->name();
+        $last_name = fake()->lastname();
         return [
-            'name' => fake()->name(),
+            'id' =>fake()->uuid(),
+            'first_name' =>  $name,
+            'last_name' =>   $last_name,
+            'middle_name' =>  $last_name,
+            'origin_name' => $name ,
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),

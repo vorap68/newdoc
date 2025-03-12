@@ -1,7 +1,10 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
+//use User\UserController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\User\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,10 +25,19 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::resource('/users',UserController::class);
 });
 
 require __DIR__.'/auth.php';
+
+Route::get('/reset-db',function(){
+    Artisan::call('migrate::fresh',['seed'=> true]);
+    return to_route('login');
+});
