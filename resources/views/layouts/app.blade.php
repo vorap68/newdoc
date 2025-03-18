@@ -35,4 +35,57 @@
     </div>
 </body>
 
+<script>
+ $(document).ready(function(){
+  
+    $('#massDel').click(function(){
+        const selectedIds = $('.user-del:checked').map(function(){
+            return $(this).val();
+        }).get();
+        console.log(selectedIds);
+        $.ajax({
+            url: "{{route('users.mass-delete')}}",
+            method:"POST",
+            data: {
+                    _token: "{{ csrf_token() }}",
+                    users_ids: selectedIds
+                },
+            success:function(responce){
+                console.log(responce.ids);
+                $('.user-del:checked').prop('checked',false);
+                setTimeout(function() {
+                        location.reload(); // Перезагрузка через 1 секунду
+                    }, 1000);
+            }    
+        })
+    })
+
+    $('#massForceDel').click(function(){
+        const selectedForceIds = $('.user-forcedel:checked').map(function(){
+            return $(this).val();
+        }).get();
+        console.log(selectedForceIds);
+        $.ajax({
+            url: "{{route('users.mass-forcedelete')}}",
+            method:"POST",
+            data: {
+                    _token: "{{ csrf_token() }}",
+                    users_ids: selectedForceIds
+                },
+            success:function(responce){
+                console.log(responce.ids);
+                $('.user-forcedel:checked').prop('checked',false);
+                setTimeout(function() {
+                        location.reload(); // Перезагрузка через 1 секунду
+                    }, 1000);
+            }    
+        })
+    })
+
+  
+})
+    
+ 
+</script>
+
 </html>

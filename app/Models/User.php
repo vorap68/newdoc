@@ -13,16 +13,25 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable , SoftDeletes;
 
+    public $incrementing = false; // Указываем, что ключ не автоинкрементный
+    protected $keyType = 'string'; // Тип ключа - строка
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'id',
+        'last_name',
+        'first_name',
+        'origin_name',
         'email',
+        'phone',
         'password',
+        'deleted_at'
     ];
+      
 
     /**
      * The attributes that should be hidden for serialization.

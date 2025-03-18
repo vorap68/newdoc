@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             'middle_name' => 'middle_dimon',
             'origin_name' => 'dimon',
             'email' => 'dimon@com.org',
+            'phone' => '777777777777',
             'password' => Hash::make('dmitry13'),
         ]);
     }
