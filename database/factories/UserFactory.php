@@ -25,6 +25,7 @@ class UserFactory extends Factory
     {
         $name = fake()->name();
         $last_name = fake()->lastname();
+        $trashed = [null,date('Y-m-d H:i:s')];
         return [
             'id' =>fake()->uuid(),
             'first_name' =>  $name,
@@ -33,6 +34,7 @@ class UserFactory extends Factory
             'origin_name' => $name ,
             'phone' =>fake()->phoneNumber(),
             'email' => fake()->unique()->safeEmail(),
+            'deleted_at' => $trashed[rand(0,1)],
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),

@@ -82,7 +82,24 @@
         })
     })
 
-  
+  $('#massRestory').click(function(){
+        const selectedRestoreIds = $('.user-restore:checked').map(function(){
+            return $(this).val();
+        }).get();
+        console.log(selectedRestoreIds);
+        $.ajax({
+            url:"{{route('users.mass-restore')}}",
+            method:"POST",
+            data:{
+                _token: "{{ csrf_token() }}",
+                users_ids: selectedRestoreIds
+            },
+           success:function(response){
+            window.location.href = response.restory;
+            }
+            
+   } );
+  })
 })
     
  
