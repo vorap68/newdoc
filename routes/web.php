@@ -1,6 +1,9 @@
 <?php
 
 //use User\UserController;
+
+use App\Http\Controllers\HistoryController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\ProfileController;
@@ -40,17 +43,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/users/deleted',[TrashedController::class,'index'])->name('users.deleted');
     Route::get('/users/restore/{id}',[TrashedController::class,'restoreUser'])->name('users.restore');
     Route::post('/users/mass-restore',[TrashedController::class,'massRestoreUser'])->name('users.mass-restore');
-    // Route::post('/users/restory',function(){
-    //     dd('7777777777');
-    // })->name('users.restory');
     Route::resource('/users',UserController::class);
     Route::delete('/users/force-delete/{user}',[UserController::class,'forceDelete'])->name('users.force-delete');
     Route::post('/users/mass-delete',[UserController::class,'massDel'])->name('users.mass-delete');
     Route::post('/users/mass-forcedelete',[UserController::class,'massForceDel'])->name('users.mass-forcedelete');
     Route::post('/users/search',SearchController::class)->name('users.search');
     Route::post('/users/sort',SortController::class)->name('users.sort');
-    //Route::post('/users/restory',[TrashedController::class,'restory'])->name('users.restory');
-  
+
+    //routes for history
+    Route::get('/history',[HistoryController::class,'index'])->name('history.index');
+    Route::get('/history/detail/{id}',[HistoryController::class,'detail'])->name('history.detail');
+    Route::get('/history/user-recovery/{id}',[HistoryController::class,'recovery'])->name('history.user.recovery');
    
    
 });
@@ -63,5 +66,10 @@ Route::get('/reset-db',function(){
 });
 
 Route::get('/test',function(){
-    dd(now());
+    $user = User::find('228edd5d-47c5-3096-a099-0ff9eb965960');
+    $one = $user->toArray();
+    dump($one);
+  $user->update(['first_name'=>888]);
+  $user_new =  User::find('228edd5d-47c5-3096-a099-0ff9eb965960');
+    dd($one, $user_new);
 });

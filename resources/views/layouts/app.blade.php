@@ -50,13 +50,20 @@
                     _token: "{{ csrf_token() }}",
                     users_ids: selectedIds
                 },
-            success:function(responce){
-                console.log(responce.ids);
+            success:function(response){
+                console.log(response.ids);
                 $('.user-del:checked').prop('checked',false);
                 setTimeout(function() {
                         location.reload(); // Перезагрузка через 1 секунду
                     }, 1000);
-            }    
+            },
+            error:function(xhr){
+                let errorMessage = JSON.parse(xhr.responseText).message;
+                $('#error_message')
+                .removeClass('d-none')
+                .text(errorMessage)
+            }
+
         })
     })
 
@@ -78,6 +85,12 @@
                 setTimeout(function() {
                         location.reload(); // Перезагрузка через 1 секунду
                     }, 1000);
+            },
+            error:function(xhr){
+                let errorMessage = JSON.parse(xhr.responseText).message;
+                $('#error_message')
+                .removeClass('d-none')
+                .text(errorMessage)
             }    
         })
     })

@@ -2,7 +2,13 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Actions\User\DeleteUserAction;
+use App\Actions\User\ForceDeleteAction;
+use App\Actions\User\MassDeleteUserAction;
+use App\Actions\User\MassForceDeleteAction;
+use App\Actions\User\UpdateUserAction;
 use App\Models\User;
+use App\Models\History;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
 use App\Http\Controllers\Controller;
@@ -17,22 +23,6 @@ class UserController extends Controller
         //$users = User::withTrashed()->get();
         $users = User::all();
       return view('user.index',compact('users'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
     }
 
     /**
@@ -54,48 +44,60 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserRequest $request, User $user)
+    public function update(UserRequest $request, User $user, UpdateUserAction $update_user)
     {
-        //dd($request->all());
-        $user->update($request->all());
-        $user->save();
-        return redirect()->back();
-        }
+        $success = $update_user->handle($request, $user);
+        if(!$success){
+            return redirect()->back()->with('error','User wasn`t updated');
+           }
+           return redirect()->back();
+            }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(User $user, DeleteUserAction $delete_user)
     {
-        $user->delete();
+       $success = $delete_user->handle($user);
+       if(!$success){
+        return redirect()->back()->with('error','User wasn`t deleted');
+       }
          return to_route('users.index');
     }
 
-    public function massDel(Request $request)
+    public function massDel(Request $request, MassDeleteUserAction $mass_delete_user)
     {
-        foreach($request->users_ids as $id){
-            $user = User::find($id);
-            $this->destroy($user);
-        }
+       $success = $mass_delete_user->handle($request->users_ids);
+       if(!$success){
+        return response()->json(['message'=>'Users weren`t deleted'],500);
+       }
+       
         return response()->json([
             'ids'=>$request->users_ids,
         ]);
     }
-    public function massForceDel(Request $request)
-    {
-        foreach($request->users_ids as $id){
-            $user = User::find($id);
-            $this->forceDelete($user);
+   
+
+    public function forceDelete(User $user,ForceDeleteAction $force_delete)
+    {  
+        $success = $force_delete->handle($user);
+        if(!$success){
+            return redirect()->back()->with('error','User wasn`t forseDeleted');
         }
-        return response()->json([
-            'ids'=>$request->users_ids,
-        ]);
+        
+         return to_route('users.index');
     }
 
-    public function forceDelete(User $user)
+
+    public function massForceDel(Request $request,MassForceDeleteAction $mass_force_delete)
     {
-       
-        $user->forceDelete();
-        return to_route('users.index');
+       $success = $mass_force_delete->handle($request->users_ids);
+        if(!$success){
+            return response()->json(['message'=>'Users weren`t deleted'],500);
+           }
+
+        return response()->json([
+            'ids'=>$request->users_ids,
+        ]);
     }
 }

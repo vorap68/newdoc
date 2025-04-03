@@ -4,7 +4,7 @@
 
 @section('content')
 <form id="filterForm" method="POST" action="{{ route('users.search') }}">
-
+@csrf
   <input type="text" name="first_name" placeholder="Поиск по имени" value="{{ request('first_name') }}">
   <input type="text" name="last_name" placeholder="Поиск по фамилии" value="{{ request('last_name') }}">
   <input type="text" name="email" placeholder="Поиск по email" value="{{ request('email') }}">
@@ -36,7 +36,7 @@
                 <th scope="col">Show</th>
                 <th scope="col">Edit</th>
                 <th scope="col">Delete</th>
-               
+
                 <th scope="col">MassDelete</th>
                 <th scope="col">ForceDelete</th>
                 <th scope="col">MassForceDelete</th>
@@ -59,7 +59,7 @@
                             <input type="submit" class="btn btn-danger" value="delete"></input>
                         </form>
                     </td>
-                  
+
                     <td>
                         <div class="form-check">
                             <input class="user-del" type="checkbox" value="{{$user->id}}" id="massDelete"
